@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const devData = require("../data/development-data/index.js");
-const seed = require("./seed.js");
+const index_js_1 = require("../data/development-data/index.js");
+const seed_1 = require("./seed");
 const connection_js_1 = __importDefault(require("../connection.js"));
 const runSeed = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield seed(devData);
+    yield (0, seed_1.seed)(index_js_1.categoryData, index_js_1.commentData, index_js_1.reviewData, index_js_1.userData);
     yield connection_js_1.default.end();
 });
 runSeed();
