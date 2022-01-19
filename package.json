@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": "node ./db/seeds/run-seed.js",
-    "test": "jest",
+    "setup-dbs": "psql -f ./dist/db/setup.sql",
+    "seed": "node ./dist/db/seeds/run-seed.js",
+    "test": "jest ./dist",
     "tsc": "tsc --watch"
   },
   "devDependencies": {

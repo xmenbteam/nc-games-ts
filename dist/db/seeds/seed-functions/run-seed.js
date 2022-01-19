@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const devData = require("../data/development-data/index.js");
 const seed = require("./seed.js");
-const connection_js_1 = __importDefault(require("../connection.js"));
+const connection_js_1 = __importDefault(require("../../connection.js"));
 const runSeed = () => __awaiter(void 0, void 0, void 0, function* () {
     yield seed(devData);
     yield connection_js_1.default.end();
