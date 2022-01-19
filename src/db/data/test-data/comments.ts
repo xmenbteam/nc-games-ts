@@ -1,4 +1,4 @@
-import { rawComment } from "../../Types/raw-data-types";
+import { rawComment } from "../../../Types/raw-data-types";
 
 const commentData: rawComment[] = [
   {

@@ -1,4 +1,4 @@
-import { rawCategory } from "../../Types/raw-data-types";
+import { rawCategory } from "../../../Types/raw-data-types";
 
 const categoryData: rawCategory[] = [
   {

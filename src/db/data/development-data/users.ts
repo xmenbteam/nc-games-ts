@@ -1,4 +1,4 @@
-import { rawUser } from "../../Types/raw-data-types";
+import { rawUser } from "../../../Types/raw-data-types";
 
 const userData: rawUser[] = [
   {

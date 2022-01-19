@@ -1,4 +1,4 @@
-import { rawReview } from "../../Types/raw-data-types";
+import { rawReview } from "../../../Types/raw-data-types";
 
 const reviewData: rawReview[] = [
   {
