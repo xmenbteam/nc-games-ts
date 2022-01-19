@@ -1,19 +1,19 @@
 const format = require("pg-format");
 
-import db from "../../connection";
-import { dropTables, createTables } from "../../../Utils/manage-tables";
+import db from "../connection";
+import { dropTables, createTables } from "../../Utils/manage-tables";
 import {
   rawComment,
   rawCategory,
   rawReview,
   rawUser,
-} from "../../../Types/raw-data-types";
+} from "../../Types/raw-data-types";
 import {
   categoryDataFormatter,
   userDataFormatter,
   reviewDataFormatter,
   commentDataFormatter,
-} from "../../../Utils/seed-utils";
+} from "../../Utils/seed-utils";
 
 export const seed = async (
   categoryData: rawCategory[],
