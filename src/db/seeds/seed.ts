@@ -1,4 +1,4 @@
-const format = require("pg-format");
+import format from "pg-format";
 
 import db from "../connection";
 import { dropTables, createTables } from "../../Utils/manage-tables";
@@ -48,7 +48,7 @@ export const seed = async (
     userDataFormatter(userData)
   );
 
-  const users = db.query(insertIntoUsers).then((result: any) => result.rows);
+  const users = db.query(insertIntoUsers).then(({ rows }) => rows);
 
   await Promise.all([categories, users]);
 

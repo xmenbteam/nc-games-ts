@@ -13,14 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.seed = void 0;
-const format = require("pg-format");
+const pg_format_1 = __importDefault(require("pg-format"));
 const connection_1 = __importDefault(require("../connection"));
 const manage_tables_1 = require("../../Utils/manage-tables");
 const seed_utils_1 = require("../../Utils/seed-utils");
 const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, manage_tables_1.dropTables)();
     yield (0, manage_tables_1.createTables)();
-    const insertIntoCategories = format(`
+    const insertIntoCategories = (0, pg_format_1.default)(`
   INSERT INTO categories 
       (slug, description)
       VALUES
@@ -29,15 +29,15 @@ const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void
   `, (0, seed_utils_1.categoryDataFormatter)(categoryData));
     const categoryQuery = yield connection_1.default.query(insertIntoCategories);
     const categories = categoryQuery.rows;
-    const insertIntoUsers = format(`
+    const insertIntoUsers = (0, pg_format_1.default)(`
       INSERT INTO users 
       (username, avatar_url, name)
       VALUES
       %L
       RETURNING *;`, (0, seed_utils_1.userDataFormatter)(userData));
-    const users = connection_1.default.query(insertIntoUsers).then((result) => result.rows);
+    const users = connection_1.default.query(insertIntoUsers).then(({ rows }) => rows);
     yield Promise.all([categories, users]);
-    const insertIntoReviews = format(`
+    const insertIntoReviews = (0, pg_format_1.default)(`
       INSERT INTO reviews 
       (
         title,
@@ -53,7 +53,7 @@ const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void
       %L
       RETURNING *;`, (0, seed_utils_1.reviewDataFormatter)(reviewData));
     yield connection_1.default.query(insertIntoReviews).then((result) => result.rows);
-    const insertIntoComments = format(`
+    const insertIntoComments = (0, pg_format_1.default)(`
       INSERT INTO comments
       (
         author, 
