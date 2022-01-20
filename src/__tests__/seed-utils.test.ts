@@ -3,7 +3,7 @@ import {
   commentDataFormatter,
   reviewDataFormatter,
   userDataFormatter,
-} from "../seed-utils";
+} from "../Utils/seed-utils";
 
 describe("categoryDataFormatter", () => {
   test("returns expected", () => {
