@@ -17,7 +17,7 @@ const pg_format_1 = __importDefault(require("pg-format"));
 const connection_1 = __importDefault(require("../connection"));
 const manage_tables_1 = require("../../Utils/manage-tables");
 const seed_utils_1 = require("../../Utils/seed-utils");
-const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void 0, void 0, void 0, function* () {
+const seed = ({ categoryData, commentData, reviewData, userData, }) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, manage_tables_1.dropTables)();
     yield (0, manage_tables_1.createTables)();
     const insertIntoCategories = (0, pg_format_1.default)(`
@@ -35,7 +35,7 @@ const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void
       VALUES
       %L
       RETURNING *;`, (0, seed_utils_1.userDataFormatter)(userData));
-    const users = connection_1.default.query(insertIntoUsers).then(({ rows }) => rows);
+    const users = connection_1.default.query(insertIntoUsers).then((result) => result.rows);
     yield Promise.all([categories, users]);
     const insertIntoReviews = (0, pg_format_1.default)(`
       INSERT INTO reviews 
@@ -52,7 +52,7 @@ const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void
       VALUES
       %L
       RETURNING *;`, (0, seed_utils_1.reviewDataFormatter)(reviewData));
-    yield connection_1.default.query(insertIntoReviews).then((result) => result.rows);
+    yield connection_1.default.query(insertIntoReviews).then(({ rows }) => rows);
     const insertIntoComments = (0, pg_format_1.default)(`
       INSERT INTO comments
       (
@@ -65,6 +65,6 @@ const seed = (categoryData, commentData, reviewData, userData) => __awaiter(void
         VALUES
       %L
       RETURNING *;`, (0, seed_utils_1.commentDataFormatter)(commentData));
-    return connection_1.default.query(insertIntoComments).then((result) => result.rows);
+    return connection_1.default.query(insertIntoComments).then(({ rows }) => rows);
 });
 exports.seed = seed;

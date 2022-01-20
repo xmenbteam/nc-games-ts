@@ -1,6 +1,6 @@
-import { rawComment } from "../../../Types/raw-data-types";
+import { RawComment } from "../../../Types/raw-data-types";
 
-const commentData: rawComment[] = [
+const commentData: RawComment[] = [
   {
     body: "I loved this game too!",
     votes: 16,

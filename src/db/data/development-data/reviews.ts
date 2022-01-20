@@ -1,6 +1,6 @@
-import { rawReview } from "../../../Types/raw-data-types";
+import { RawReview } from "../../../Types/raw-data-types";
 
-const reviewData: rawReview[] = [
+const reviewData: RawReview[] = [
   {
     title: "Culture a Love of Agriculture With Agricola",
     designer: "Uwe Rosenberg",

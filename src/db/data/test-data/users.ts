@@ -1,6 +1,6 @@
-import { rawUser } from "../../../Types/raw-data-types";
+import { RawUser } from "../../../Types/raw-data-types";
 
-const userData: rawUser[] = [
+const userData: RawUser[] = [
   {
     username: "mallionaire",
     name: "haz",

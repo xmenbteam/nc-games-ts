@@ -5,28 +5,28 @@ import {
   formattedUserData,
 } from "../Types/formatted-data-types";
 import {
-  rawCategory,
-  rawComment,
-  rawReview,
-  rawUser,
+  RawCategory,
+  RawComment,
+  RawReview,
+  RawUser,
 } from "../Types/raw-data-types";
 
 export const categoryDataFormatter = (
-  categoryData: rawCategory[]
+  categoryData: RawCategory[]
 ): formattedCategoryData[] => {
   return categoryData.map(({ slug, description }) => {
     return [slug, description];
   });
 };
 
-export const userDataFormatter = (userData: rawUser[]): formattedUserData[] => {
+export const userDataFormatter = (userData: RawUser[]): formattedUserData[] => {
   return userData.map(({ username, avatar_url, name }) => {
     return [username, avatar_url, name];
   });
 };
 
 export const reviewDataFormatter = (
-  reviewData: rawReview[]
+  reviewData: RawReview[]
 ): formattedReviewData[] => {
   return reviewData.map(
     ({
@@ -54,7 +54,7 @@ export const reviewDataFormatter = (
 };
 
 export const commentDataFormatter = (
-  commentData: rawComment[]
+  commentData: RawComment[]
 ): formattedCommentData[] => {
   return commentData.map(({ author, review_id, votes, created_at, body }) => {
     return [author, review_id, votes, created_at, body];

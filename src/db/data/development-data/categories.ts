@@ -1,6 +1,6 @@
-import { rawCategory } from "../../../Types/raw-data-types";
+import { RawCategory } from "../../../Types/raw-data-types";
 
-const categoryData: rawCategory[] = [
+const categoryData: RawCategory[] = [
   {
     slug: "strategy",
     description:

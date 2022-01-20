@@ -16,7 +16,7 @@ const index_js_1 = require("../data/development-data/index.js");
 const seed_1 = require("./seed");
 const connection_js_1 = __importDefault(require("../connection.js"));
 const runSeed = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, seed_1.seed)(index_js_1.categoryData, index_js_1.commentData, index_js_1.reviewData, index_js_1.userData);
+    yield (0, seed_1.seed)({ categoryData: index_js_1.categoryData, commentData: index_js_1.commentData, reviewData: index_js_1.reviewData, userData: index_js_1.userData });
     yield connection_js_1.default.end();
 });
 runSeed();

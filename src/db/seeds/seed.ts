@@ -2,12 +2,7 @@ import format from "pg-format";
 
 import db from "../connection";
 import { dropTables, createTables } from "../../Utils/manage-tables";
-import {
-  rawComment,
-  rawCategory,
-  rawReview,
-  rawUser,
-} from "../../Types/raw-data-types";
+import { SeedData } from "../../Types/raw-data-types";
 import {
   categoryDataFormatter,
   userDataFormatter,
@@ -15,12 +10,12 @@ import {
   commentDataFormatter,
 } from "../../Utils/seed-utils";
 
-export const seed = async (
-  categoryData: rawCategory[],
-  commentData: rawComment[],
-  reviewData: rawReview[],
-  userData: rawUser[]
-) => {
+export const seed = async ({
+  categoryData,
+  commentData,
+  reviewData,
+  userData,
+}: SeedData) => {
   await dropTables();
   await createTables();
 
@@ -48,7 +43,7 @@ export const seed = async (
     userDataFormatter(userData)
   );
 
-  const users = db.query(insertIntoUsers).then(({ rows }) => rows);
+  const users = db.query(insertIntoUsers).then((result) => result.rows);
 
   await Promise.all([categories, users]);
 
@@ -71,7 +66,7 @@ export const seed = async (
     reviewDataFormatter(reviewData)
   );
 
-  await db.query(insertIntoReviews).then((result: any) => result.rows);
+  await db.query(insertIntoReviews).then(({ rows }) => rows);
 
   const insertIntoComments = format(
     `
@@ -89,5 +84,5 @@ export const seed = async (
     commentDataFormatter(commentData)
   );
 
-  return db.query(insertIntoComments).then((result: any) => result.rows);
+  return db.query(insertIntoComments).then(({ rows }) => rows);
 };
