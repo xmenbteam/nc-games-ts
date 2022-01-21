@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getApi = void 0;
 const getApi = (req, res, next) => {
     try {
-        res.sendStatus(200).send({ msg: "Api running!" });
+        res.status(200).send({ msg: "Api running!" });
     }
     catch (err) {
+        console.log({ err });
         next(err);
     }
 };

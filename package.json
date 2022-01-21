@@ -5,6 +5,7 @@
     "setup-dbs": "psql -f ./dist/db/setup.sql",
     "seed": "node ./dist/db/seeds/run-seed.js",
     "test": "jest ./src",
+    "test-api": "jest ./src/__tests__/api.test.ts",
     "tsc": "tsc --watch"
   },
   "devDependencies": {
