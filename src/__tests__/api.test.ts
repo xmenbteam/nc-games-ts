@@ -256,7 +256,7 @@ describe("REVIEWS", () => {
   });
 });
 
-describe("Users", () => {
+describe("USERS", () => {
   describe("GET", () => {
     test("200 GET users", async () => {
       const response = await request(app).get("/api/users").expect(200);
