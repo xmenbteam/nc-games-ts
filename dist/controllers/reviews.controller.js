@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllReviews = exports.getReviewById = void 0;
+exports.deleteReviewById = exports.postReview = exports.patchReviewById = exports.getAllReviews = exports.getReviewById = void 0;
 const reviews_model_1 = require("../models/reviews.model");
 const getReviewById = ({ params }, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -39,3 +39,33 @@ const getAllReviews = ({ query }, res, next) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.getAllReviews = getAllReviews;
+const patchReviewById = ({ params, body }, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { inc_votes } = body;
+        const { review_id } = params;
+        const review = yield (0, reviews_model_1.updateReviewById)(inc_votes, review_id);
+        res.status(201).send({ review });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.patchReviewById = patchReviewById;
+const postReview = ({ body }, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const review = yield (0, reviews_model_1.sendReview)(body);
+        res.status(201).send({ review });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.postReview = postReview;
+const deleteReviewById = ({ params }, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { review_id } = params;
+    const reviewDeleter = (0, reviews_model_1.removeReview)(review_id)
+        .then(() => res.status(204).send({ msg: "review deleted" }))
+        .catch(next);
+    yield reviewDeleter;
+});
+exports.deleteReviewById = deleteReviewById;

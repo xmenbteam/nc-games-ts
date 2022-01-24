@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategories = void 0;
+exports.postCategory = exports.getCategories = void 0;
 const categories_model_1 = require("../models/categories.model");
 const getCategories = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -22,3 +22,14 @@ const getCategories = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.getCategories = getCategories;
+const postCategory = ({ body }, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { slug, description } = body;
+        const category = yield (0, categories_model_1.sendCategory)(slug, description);
+        res.status(201).send({ category });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.postCategory = postCategory;

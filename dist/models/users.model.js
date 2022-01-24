@@ -32,7 +32,7 @@ const fetchUsers = (username) => __awaiter(void 0, void 0, void 0, function* () 
         queryStr += `;`;
     const result = yield connection_1.default.query(queryStr, values);
     if (result.rows.length === 0)
-        return Promise.reject({ status: 404, msg: "Oh dear! User not found!" });
+        return Promise.reject({ status: 404, msg: "User not found!" });
     return result.rows;
 });
 exports.fetchUsers = fetchUsers;

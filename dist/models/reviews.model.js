@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchAllReviews = exports.fetchReviewById = void 0;
+exports.removeReview = exports.sendReview = exports.updateReviewById = exports.fetchAllReviews = exports.fetchReviewById = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 const util_functions_1 = require("../Utils/util-functions");
 const query_utils_1 = require("../Utils/query-utils");
@@ -74,3 +74,39 @@ const fetchAllReviews = ({ sort_by = "created_at", order_by = "desc", category, 
     return totalReviewsObject;
 });
 exports.fetchAllReviews = fetchAllReviews;
+const updateReviewById = (inc_votes, review_id) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryStr = `
+  UPDATE reviews
+  SET votes = votes + $1
+  WHERE review_id = $2
+  RETURNING *;
+  `;
+    const values = [inc_votes, review_id];
+    const result = yield connection_1.default.query(queryStr, values);
+    const review = result.rows[0];
+    if (!review) {
+        return Promise.reject({
+            status: 404,
+            msg: "Review not found!",
+        });
+    }
+    return review;
+});
+exports.updateReviewById = updateReviewById;
+const sendReview = ({ username, title, review_body, designer, category, }) => __awaiter(void 0, void 0, void 0, function* () {
+    if ([username, title, review_body, designer, category].some((el) => !el))
+        return Promise.reject({ status: 400, msg: "Please fill in all fields!" });
+    let queryStr = `INSERT INTO reviews (owner, title, review_body, designer, category)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+    let values = [username, title, review_body, designer, category];
+    const insertQuery = yield connection_1.default.query(queryStr, values);
+    return insertQuery.rows[0];
+});
+exports.sendReview = sendReview;
+const removeReview = (review_id) => __awaiter(void 0, void 0, void 0, function* () {
+    let queryStr = `DELETE FROM reviews * WHERE review_id = $1`;
+    const values = [review_id];
+    const result = yield connection_1.default.query(queryStr, values);
+    return result.rows;
+});
+exports.removeReview = removeReview;

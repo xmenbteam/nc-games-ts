@@ -12,10 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchCategories = void 0;
+exports.sendCategory = exports.fetchCategories = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 const fetchCategories = () => __awaiter(void 0, void 0, void 0, function* () {
     const categories = yield connection_1.default.query(`SELECT * FROM categories`);
     return categories.rows;
 });
 exports.fetchCategories = fetchCategories;
+const sendCategory = (slug, description) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield connection_1.default.query(`INSERT INTO categories (slug, description) VALUES ($1, $2) RETURNING *`, [slug, description]);
+    return result.rows[0];
+});
+exports.sendCategory = sendCategory;
