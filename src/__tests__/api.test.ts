@@ -14,6 +14,10 @@ describe("API", () => {
     const response = await request(app).get("/api").expect(200);
     expect(response.body.msg).toBe("Api running!");
   });
+  test("Bad Path", async () => {
+    const response = await request(app).get("/api/cheese").expect(404);
+    expect(response.body.msg).toBe("Sorry, invalid route");
+  });
 });
 
 describe("CATEGORIES", () => {

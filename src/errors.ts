@@ -39,3 +39,15 @@ export const handle500Errors = (
 ) => {
   res.status(500).send({ msg: "Internal server error!" });
 };
+
+export const handleInvalidPaths = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.status(404).send({ msg: "Sorry, invalid route" });
+};
+
+export const handle405s = (req: Request, res: Response, next: NextFunction) => {
+  res.status(405).send({ msg: "Sorry, method not allowed" });
+};
