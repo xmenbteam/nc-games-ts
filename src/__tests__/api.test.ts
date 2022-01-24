@@ -703,28 +703,24 @@ describe("COMMENTS", () => {
     });
   });
   describe("PAGINATION", () => {
-    test("Review 3, limit = 10 p = 1", () => {
+    test("Review 3, limit = 10 p = 1", async () => {
       const review_id = 3;
       const limit = 10;
       const p = 1;
-      return request(app)
+      const response = await request(app)
         .get(`/api/reviews/${review_id}/comments?limit=${limit}&page=${p}`)
-        .expect(200)
-        .then((response) => {
-          expect(response.body.comments.length).toBe(3);
-        });
+        .expect(200);
+      expect(response.body.comments.length).toBe(3);
     });
-    test("Review 3, limit = 1 p = 1", () => {
+    test("Review 3, limit = 1 p = 1", async () => {
       const review_id = 3;
       const limit = 1;
       const p = 1;
-      return request(app)
+      const response = await request(app)
         .get(`/api/reviews/${review_id}/comments?limit=${limit}&page=${p}`)
-        .expect(200)
-        .then((response) => {
-          expect(response.body.comments.length).toBe(1);
-          expect(response.body.pages).toBe(3);
-        });
+        .expect(200);
+      expect(response.body.comments.length).toBe(1);
+      expect(response.body.pages).toBe(3);
     });
   });
 });
