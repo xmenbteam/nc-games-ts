@@ -2,7 +2,7 @@ import { seed } from "../db/seeds/seed";
 import * as testData from "../db/data/test-data/index";
 import db from "../db/connection";
 import request from "supertest";
-import app from "../app";
+const app = require("../app");
 import { RawCategory, RawComment, RawUser } from "../Types/raw-data-types";
 import { ReturnedReview } from "../Types/api-returned-data-types";
 
