@@ -1,8 +1,11 @@
 import express, { Router } from "express";
-import { getCategories } from "../controllers/categories.controller";
+import {
+  getCategories,
+  postCategory,
+} from "../controllers/categories.controller";
 
 const categoriesRouter: Router = express.Router();
 
-categoriesRouter.route("/").get(getCategories);
+categoriesRouter.route("/").get(getCategories).post(postCategory);
 
 export default categoriesRouter;

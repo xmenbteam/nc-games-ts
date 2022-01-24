@@ -23,7 +23,7 @@ export const fetchUsers = async (username?: string): Promise<RawUser[]> => {
   const result = await db.query(queryStr, values);
 
   if (result.rows.length === 0)
-    return Promise.reject({ status: 404, msg: "Oh dear! User not found!" });
+    return Promise.reject({ status: 404, msg: "User not found!" });
 
   return result.rows;
 };

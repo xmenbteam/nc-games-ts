@@ -9,7 +9,7 @@ import { ReturnedReview } from "../Types/api-returned-data-types";
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe("api", () => {
+describe("API", () => {
   test("returns api", async () => {
     const response = await request(app).get("/api").expect(200);
     expect(response.body.msg).toBe("Api running!");
@@ -17,19 +17,51 @@ describe("api", () => {
 });
 
 describe("CATEGORIES", () => {
-  test("returns categories", async () => {
-    const response = await request(app).get("/api/categories").expect(200);
+  describe("GET CATEGORIES", () => {
+    test("200 - GET categories", async () => {
+      const response = await request(app).get("/api/categories").expect(200);
 
-    const categories: RawCategory[] = response.body.categories;
+      const categories: RawCategory[] = response.body.categories;
 
-    expect(Array.isArray(categories)).toBe(true);
-    categories.forEach((category: RawCategory) => {
-      expect(category).toEqual(
-        expect.objectContaining({
-          slug: expect.any(String),
-          description: expect.any(String),
-        })
-      );
+      expect(Array.isArray(categories)).toBe(true);
+      categories.forEach((category: RawCategory) => {
+        expect(category).toEqual(
+          expect.objectContaining({
+            slug: expect.any(String),
+            description: expect.any(String),
+          })
+        );
+      });
+    });
+  });
+
+  describe("POST CATEGORY", () => {
+    test("201 - POST new category", async () => {
+      const body = {
+        slug: "MMORPG",
+        description: "For those who really hate the real world",
+      };
+      const beforeCats = await request(app).get("/api/categories").expect(200);
+      const category = await request(app)
+        .post("/api/categories")
+        .send(body)
+        .expect(201);
+      const afterCats = await request(app).get("/api/categories").expect(200);
+      expect(beforeCats.body.categories.length).toBe(4);
+      expect(category.body.category).toEqual(body);
+      expect(afterCats.body.categories.length).toBe(5);
+    });
+    test("400 - Bad Request - POST new category", async () => {
+      const body = {
+        // slug: "MMORPG",
+        description: "For those who really hate the real world",
+      };
+
+      const response = await request(app)
+        .post("/api/categories")
+        .send(body)
+        .expect(400);
+      expect(response.body.msg).toBe("Field cannot be null!");
     });
   });
 });
@@ -226,7 +258,74 @@ describe("REVIEWS", () => {
       });
     });
   });
-  describe("PAGINATION", () => {
+  describe("PATCH REVIEW BY ID", () => {
+    test("201 - Increases votes review by ID", async () => {
+      const inc_votes = 1;
+      const review_id = "3";
+      const originalReview = await request(app)
+        .get(`/api/reviews/${review_id}`)
+        .expect(200);
+      const updatedReview = await request(app)
+        .patch(`/api/reviews/${review_id}`)
+        .send({ inc_votes })
+        .expect(201);
+      const originalVotes = originalReview.body.review.votes;
+      const updatedVotes = updatedReview.body.review.votes;
+
+      expect(originalVotes).not.toBe(updatedVotes);
+      expect(updatedVotes).toBe(6);
+    });
+    test("201 - Decreases votes review by ID", async () => {
+      const inc_votes = -1;
+      const review_id = "3";
+      const originalReview = await request(app)
+        .get(`/api/reviews/${review_id}`)
+        .expect(200);
+      const updatedReview = await request(app)
+        .patch(`/api/reviews/${review_id}`)
+        .send({ inc_votes })
+        .expect(201);
+      const originalVotes = originalReview.body.review.votes;
+      const updatedVotes = updatedReview.body.review.votes;
+
+      expect(originalVotes).not.toBe(updatedVotes);
+      expect(updatedVotes).toBe(4);
+    });
+    test("400 - Bad request - string inc-votes", async () => {
+      const inc_votes = "cheese";
+      const review_id = "3";
+
+      const updatedReview = await request(app)
+        .patch(`/api/reviews/${review_id}`)
+        .send({ inc_votes })
+        .expect(400);
+
+      expect(updatedReview.body.msg).toBe("Bad request!");
+    });
+    test("400 - Bad request - string review_id", async () => {
+      const inc_votes = 1;
+      const review_id = "cheese";
+
+      const updatedReview = await request(app)
+        .patch(`/api/reviews/${review_id}`)
+        .send({ inc_votes })
+        .expect(400);
+
+      expect(updatedReview.body.msg).toBe("Bad request!");
+    });
+    test("404 - Review not found", async () => {
+      const inc_votes = 1;
+      const review_id = "12345";
+
+      const updatedReview = await request(app)
+        .patch(`/api/reviews/${review_id}`)
+        .send({ inc_votes })
+        .expect(404);
+
+      expect(updatedReview.body.msg).toBe("Review not found!");
+    });
+  });
+  describe("REVIEW PAGINATION", () => {
     test("limit = 11 p = 1", async () => {
       const limit = 11;
       const p = 1;
@@ -252,6 +351,82 @@ describe("REVIEWS", () => {
         .expect(200);
       expect(response.body.pages).toBe(7);
       expect(response.body.reviews.length).toBe(2);
+    });
+  });
+  describe("POST REVIEW", () => {
+    test("201 - POST new review", async () => {
+      const body = {
+        username: "bainesface",
+        title: "OMG I LOVE TWISTER",
+        review_body: "Just great. Twisty fun an that",
+        designer: "hasbro",
+        category: "dexterity",
+      };
+      const response = await request(app)
+        .post("/api/reviews")
+        .send(body)
+        .expect(201);
+
+      expect(response.body.review).toEqual(
+        expect.objectContaining({
+          review_id: 14,
+          title: "OMG I LOVE TWISTER",
+          review_body: "Just great. Twisty fun an that",
+          designer: "hasbro",
+          review_img_url:
+            "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg",
+          votes: 0,
+          category: "dexterity",
+          owner: "bainesface",
+          created_at: expect.any(String),
+          // comment_count: 0,
+        })
+      );
+    });
+    test("400 - POST new review - username doesnt exist", async () => {
+      const body = {
+        username: "cheeseman",
+        title: "OMG I LOVE TWISTER",
+        review_body: "Just great. Twisty fun an that",
+        designer: "hasbro",
+        category: "dexterity",
+      };
+      const response = await request(app)
+        .post("/api/reviews")
+        .send(body)
+        .expect(404);
+      expect(response.body.msg).toBe("Not found!");
+    });
+    test("400 - POST new review - incomplete", async () => {
+      const body = {
+        username: "bainesface",
+        title: "OMG I LOVE TWISTER",
+        review_body: "Just great. Twisty fun an that",
+        category: "dexterity",
+      };
+      const response = await request(app)
+        .post("/api/reviews")
+        .send(body)
+        .expect(400);
+      expect(response.body.msg).toBe("Please fill in all fields!");
+    });
+  });
+  describe("DELETE REVIEW", () => {
+    test("204 - Delete Review", async () => {
+      const review_id = 3;
+      return request(app)
+        .delete(`/api/reviews/${review_id}`)
+        .expect(204)
+        .then(async () => {
+          const review = await request(app)
+            .get(`/api/reviews/${review_id}`)
+            .expect(404);
+          expect(review.body.msg).toBe("Review Not Found!");
+          // const comments = await request(app)
+          //   .get(`/api/reviews/${review_id}/comments`)
+          //   .expect(404);
+          // expect(comments.body.msg).toBe("Oh dear, comments not found!");
+        });
     });
   });
 });
@@ -287,7 +462,7 @@ describe("USERS", () => {
         .get("/api/users/superman")
         .expect(404);
       const message = response.body.msg;
-      expect(message).toBe("Oh dear! User not found!");
+      expect(message).toBe("User not found!");
     });
   });
   describe("POST", () => {

@@ -15,6 +15,8 @@ export const handlePSQLErrors = (
       res.status(404).send({ msg: "Not found!", err });
     case "22003":
       res.status(404).send({ msg: "Comment not found!", err });
+    case "42601":
+      res.status(500).send({ msg: "Syntax error", err });
     default:
       next(err);
   }
@@ -26,8 +28,7 @@ export const handleCustomErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  if (err.status) res.status(err.status).send({ msg: err.msg });
-  else next(err);
+  err.status ? res.status(err.status).send({ msg: err.msg, err }) : next(err);
 };
 
 export const handle500Errors = (

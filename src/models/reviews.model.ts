@@ -7,9 +7,10 @@ import { fetchReviewsParams } from "../Types/parameter-types";
 import { pageOffsetCalc } from "../Utils/util-functions";
 import { sortByValues, orderByValues } from "../Utils/query-utils";
 import { checkIfValid } from "../Utils/util-functions";
+import { PostReview } from "../Types/post-data-types";
 
 export const fetchReviewById = async (
-  review_id: any
+  review_id: string
 ): Promise<ReturnedReview> => {
   let queryStr = `
   SELECT reviews.*, COUNT(comments.review_id) :: INT AS comment_count
@@ -77,4 +78,59 @@ export const fetchAllReviews = async ({
   };
 
   return totalReviewsObject;
+};
+
+export const updateReviewById = async (
+  inc_votes: number,
+  review_id: string
+): Promise<ReturnedReview> => {
+  const queryStr = `
+  UPDATE reviews
+  SET votes = votes + $1
+  WHERE review_id = $2
+  RETURNING *;
+  `;
+
+  const values = [inc_votes, review_id];
+
+  const result = await db.query(queryStr, values);
+
+  const review = result.rows[0];
+
+  if (!review) {
+    return Promise.reject({
+      status: 404,
+      msg: "Review not found!",
+    });
+  }
+
+  return review;
+};
+
+export const sendReview = async ({
+  username,
+  title,
+  review_body,
+  designer,
+  category,
+}: PostReview): Promise<ReturnedReview> => {
+  if ([username, title, review_body, designer, category].some((el) => !el))
+    return Promise.reject({ status: 400, msg: "Please fill in all fields!" });
+
+  let queryStr = `INSERT INTO reviews (owner, title, review_body, designer, category)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+  let values = [username, title, review_body, designer, category];
+
+  const insertQuery = await db.query(queryStr, values);
+
+  return insertQuery.rows[0];
+};
+
+export const removeReview = async (review_id: string) => {
+  let queryStr = `DELETE FROM reviews * WHERE review_id = $1`;
+  const values = [review_id];
+
+  const result = await db.query(queryStr, values);
+
+  return result.rows;
 };
