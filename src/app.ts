@@ -19,4 +19,4 @@ app.use(handlePSQLErrors);
 app.use(handleCustomErrors);
 app.use(handle500Errors);
 
-export default app;
+module.exports = app;
