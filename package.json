@@ -7,7 +7,8 @@
     "test": "jest ./src",
     "test-api": "jest ./src/__tests__/api.test.ts",
     "tsc": "tsc --watch",
-    "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) yarn seed"
+    "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) yarn seed",
+    "start": "node listen.js"
   },
   "devDependencies": {
     "jest-sorted": "^1.0.14",
