@@ -87,19 +87,16 @@ export const updateComment = async (
   return result.rows[0];
 };
 
-// export const removeComment = async (comment_id) => {
-//   const queryStr = `
-//   DELETE FROM comments WHERE comment_id = $1`;
-//   const values = [comment_id];
+export const removeComment = async (comment_id: string) => {
+  const queryStr = `
+  DELETE FROM comments WHERE comment_id = $1`;
+  const values = [comment_id];
 
-//   const result = await db.query(queryStr, values).then((response) => {
-//     // rowCount === number of deleted rows
-//     const { rowCount } = response;
-//     if (!rowCount)
-//       return Promise.reject({ status: 404, msg: "Comment not found!" });
+  const result = await db.query(queryStr, values);
+  // rowCount === number of deleted rows
+  const { rowCount } = result;
+  if (!rowCount)
+    return Promise.reject({ status: 404, msg: "Comment not found!" });
 
-//     return response;
-//   });
-
-//   return result;
-// };
+  return result;
+};

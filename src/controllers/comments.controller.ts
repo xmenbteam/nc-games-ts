@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   fetchComments,
+  removeComment,
   sendComment,
   updateComment,
 } from "../models/comments.model";
@@ -66,10 +67,16 @@ export const patchComment = async (
   }
 };
 
-// export const deleteComment = ({ params }, res, next) => {
-//   const { comment_id } = params;
-
-//   removeComment(comment_id)
-//     .then(() => res.status(204).send({ msg: "comment deleted" }))
-//     .catch(next);
-// };
+export const deleteComment = async (
+  { params }: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { comment_id } = params;
+    await removeComment(comment_id);
+    res.status(204).send({ msg: "Comment deleted" });
+  } catch (err) {
+    next(err);
+  }
+};

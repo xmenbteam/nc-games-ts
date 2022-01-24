@@ -673,4 +673,58 @@ describe("COMMENTS", () => {
       expect(response.body.msg).toBe("Comment not found!");
     });
   });
+  describe("DELETE", () => {
+    test("204 - delete comment", async () => {
+      const comment_id = 3;
+      await request(app).delete(`/api/comments/${comment_id}`).expect(204);
+
+      const response = await request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(404);
+
+      const message = response.body.msg;
+      expect(message).toBe("Comment not found!");
+    });
+    test("404 - delete comment - comment not found", async () => {
+      const comment_id = 3789456212;
+      const response = await request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(404);
+      const message = response.body.msg;
+      expect(message).toBe("Comment not found!");
+    });
+    test("400 - delete comment - bad request", async () => {
+      const comment_id = "cheese";
+      const response = await request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(400);
+      const message = response.body.msg;
+      expect(message).toBe("Bad request!");
+    });
+  });
+  describe("PAGINATION", () => {
+    test("Review 3, limit = 10 p = 1", () => {
+      const review_id = 3;
+      const limit = 10;
+      const p = 1;
+      return request(app)
+        .get(`/api/reviews/${review_id}/comments?limit=${limit}&page=${p}`)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments.length).toBe(3);
+        });
+    });
+    test("Review 3, limit = 1 p = 1", () => {
+      const review_id = 3;
+      const limit = 1;
+      const p = 1;
+      return request(app)
+        .get(`/api/reviews/${review_id}/comments?limit=${limit}&page=${p}`)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments.length).toBe(1);
+          expect(response.body.pages).toBe(3);
+        });
+    });
+  });
 });
