@@ -3,7 +3,7 @@ import * as testData from "../db/data/test-data/index";
 import db from "../db/connection";
 import request from "supertest";
 import app from "../app";
-import { RawCategory, RawUser } from "../Types/raw-data-types";
+import { RawCategory, RawComment, RawUser } from "../Types/raw-data-types";
 import { ReturnedReview } from "../Types/api-returned-data-types";
 
 beforeEach(() => seed(testData));
@@ -34,7 +34,6 @@ describe("CATEGORIES", () => {
       });
     });
   });
-
   describe("POST CATEGORY", () => {
     test("201 - POST new category", async () => {
       const body = {
@@ -491,6 +490,187 @@ describe("USERS", () => {
         .expect(400);
       const msg = response.body.msg;
       expect(msg).toBe("Field cannot be null!");
+    });
+  });
+});
+
+describe("COMMENTS", () => {
+  describe("GET COMMENTS BY REVIEW ID", () => {
+    test("200 - GET comments", async () => {
+      const response = await request(app).get("/api/comments").expect(200);
+      const comments = response.body.comments;
+      expect(comments).toHaveLength(6);
+      comments.forEach((comment: RawComment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            review_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+          })
+        );
+      });
+    });
+    test("200 - GET comments by review id", async () => {
+      const response = await request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200);
+      const comments = response.body.comments;
+      expect(Array.isArray(comments)).toBe(true);
+      expect(comments.length).toBe(3);
+    });
+    test("400 - Bad Request", async () => {
+      const response = await request(app)
+        .get("/api/reviews/cheese/comments")
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request!");
+    });
+    test("404 - Comment not found", async () => {
+      const response = await request(app)
+        .get("/api/reviews/12345/comments")
+        .expect(404);
+      expect(response.body.msg).toBe("Comments not found!");
+    });
+  });
+  describe("filter/sort", () => {
+    test("200 - GET comments by review_id sorted by votes desc", async () => {
+      const sort_by = "votes";
+      const review_id = 2;
+      const order_by = "desc";
+      const response = await request(app)
+        .get(
+          `/api/reviews/${review_id}/comments?sort_by=${sort_by}&order_by=${order_by}`
+        )
+        .expect(200);
+      const comments = response.body.comments;
+      const sortedComments = comments.sort(
+        (a: { votes: number }, b: { votes: number }) => b.votes - a.votes
+      );
+      expect(comments).toEqual(sortedComments);
+    });
+    test("400 - Invalid sort_by", async () => {
+      const response = await request(app)
+        .get("/api/reviews/1/comments?sort_by=cheese")
+        .expect(400);
+      expect(response.body.msg).toBe("invalid sort by column");
+    });
+    test("400 - Invalid order_by", async () => {
+      const response = await request(app)
+        .get("/api/reviews/1/comments?order_by=cheese")
+        .expect(400);
+      expect(response.body.msg).toBe("invalid order by column");
+    });
+  });
+  describe("POST", () => {
+    test("201 - POST new comment", async () => {
+      const body = {
+        body: "Reyt good, well done",
+        username: "mallionaire",
+      };
+      const review_id = 2;
+      const response = await request(app)
+        .post(`/api/reviews/${review_id}/comments`)
+        .send(body)
+        .expect(201);
+      const res = response.body.comment;
+      expect(res).toEqual(
+        expect.objectContaining({
+          comment_id: 7,
+          author: "mallionaire",
+          review_id: 2,
+          votes: 0,
+          created_at: expect.any(String),
+          body: "Reyt good, well done",
+        })
+      );
+    });
+    test("400 - bad request - POST new comment", async () => {
+      const body = {
+        body: "Reyt good, well done",
+        username: "mallionaire",
+      };
+      const review_id = "cheese";
+      const response = await request(app)
+        .post(`/api/reviews/${review_id}/comments`)
+        .send(body)
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request!");
+    });
+    test("404 - review not found - POST new comment", async () => {
+      const body = {
+        body: "Reyt good, well done",
+        username: "mallionaire",
+      };
+      const review_id = 123415;
+      const response = await request(app)
+        .post(`/api/reviews/${review_id}/comments`)
+        .send(body)
+        .expect(404);
+      expect(response.body.msg).toBe("Not found!");
+    });
+  });
+  describe("PATCH", () => {
+    test("200 - PATCH Votes - positive int", async () => {
+      const comment_id = "3";
+      const newVote = { inc_votes: 1 };
+
+      const getComment = await request(app)
+        .get(`/api/comments/${comment_id}`)
+        .expect(200);
+
+      const patchedComment = await request(app)
+        .patch(`/api/comments/${comment_id}`)
+        .send(newVote)
+        .expect(200);
+
+      const getVotes = getComment.body.comments[0].votes;
+      const patchedVotes = patchedComment.body.comment.votes;
+      expect(getVotes).toBe(10);
+      expect(patchedVotes).toBe(11);
+      expect(getVotes).not.toBe(patchedVotes);
+    });
+    test("201 - PATCH Votes - negative int", async () => {
+      const comment_id = 3;
+      const newVote = { inc_votes: -1 };
+
+      const getComment = request(app)
+        .get(`/api/comments/${comment_id}`)
+        .expect(200);
+
+      const patchedComment = request(app)
+        .patch(`/api/comments/${comment_id}`)
+        .send(newVote)
+        .expect(200);
+
+      const [getComment_1, patchedComment_1] = await Promise.all([
+        getComment,
+        patchedComment,
+      ]);
+      const getVotes = getComment_1.body.comments[0].votes;
+      const patchedVotes = patchedComment_1.body.comment.votes;
+      expect(getVotes).toBe(10);
+      expect(patchedVotes).toBe(9);
+      expect(getVotes).not.toBe(patchedVotes);
+    });
+    test("400 - bad request - PATCH votes", async () => {
+      const comment_id = 3;
+      const newVote = { inc_votes: "cheese" };
+      const response = await request(app)
+        .patch(`/api/comments/${comment_id}`)
+        .send(newVote)
+        .expect(400);
+      expect(response.body.msg).toBe("Bad request!");
+    });
+    test("404 - comment not found - PATCH votes", async () => {
+      const comment_id = 333333333333;
+      const newVote = { inc_votes: 1 };
+      const response = await request(app)
+        .patch(`/api/comments/${comment_id}`)
+        .send(newVote)
+        .expect(404);
+      expect(response.body.msg).toBe("Comment not found!");
     });
   });
 });

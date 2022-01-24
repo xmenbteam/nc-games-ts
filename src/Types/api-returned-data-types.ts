@@ -24,4 +24,14 @@ type ReturnedReviewObj = {
   pageTotal: number;
 };
 
-export { ReturnedComment, ReturnedReview, ReturnedReviewObj };
+type ReturnedCommentObj = {
+  comments: ReturnedComment[];
+  pageTotal: Number;
+};
+
+export {
+  ReturnedComment,
+  ReturnedReview,
+  ReturnedReviewObj,
+  ReturnedCommentObj,
+};

@@ -1,5 +1,10 @@
 import express, { Router } from "express";
 import {
+  getComments,
+  patchComment,
+  postComment,
+} from "../controllers/comments.controller";
+import {
   deleteReviewById,
   getAllReviews,
   getReviewById,
@@ -15,5 +20,6 @@ reviewsRouter
   .get(getReviewById)
   .patch(patchReviewById)
   .delete(deleteReviewById);
+reviewsRouter.route("/:review_id/comments").get(getComments).post(postComment);
 
 export default reviewsRouter;
