@@ -554,13 +554,13 @@ describe("COMMENTS", () => {
       const response = await request(app)
         .get("/api/reviews/1/comments?sort_by=cheese")
         .expect(400);
-      expect(response.body.msg).toBe("invalid sort by column");
+      expect(response.body.msg).toBe("Invalid sort by column: cheese");
     });
     test("400 - Invalid order_by", async () => {
       const response = await request(app)
         .get("/api/reviews/1/comments?order_by=cheese")
         .expect(400);
-      expect(response.body.msg).toBe("invalid order by column");
+      expect(response.body.msg).toBe("Invalid order by column: cheese");
     });
   });
   describe("POST", () => {

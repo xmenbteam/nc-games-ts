@@ -1,7 +1,7 @@
 import db from "../db/connection";
 import { ReturnedCommentObj } from "../Types/api-returned-data-types";
 import { CommentsParams } from "../Types/parameter-types";
-import { pageOffsetCalc } from "../Utils/util-functions";
+import { checkIfValid, pageOffsetCalc } from "../Utils/util-functions";
 import { sortByValues, orderByValues } from "../Utils/query-utils";
 import { RawComment } from "../Types/raw-data-types";
 
@@ -17,14 +17,20 @@ export const fetchComments = async ({
 
   const values: any[] = [limit, offset];
 
-  const isValidSortBy = sortByValues.includes(sort_by);
-  const isValidOrderBy = orderByValues.includes(order_by.toLowerCase());
+  const isValidSortBy = checkIfValid(sort_by, sortByValues);
+  const isValidOrderBy = checkIfValid(order_by, orderByValues);
 
   if (!isValidSortBy)
-    return Promise.reject({ status: 400, msg: "invalid sort by column" });
+    return Promise.reject({
+      status: 400,
+      msg: `Invalid sort by column: ${sort_by}`,
+    });
 
   if (!isValidOrderBy)
-    return Promise.reject({ status: 400, msg: "invalid order by column" });
+    return Promise.reject({
+      status: 400,
+      msg: `Invalid order by column: ${order_by}`,
+    });
 
   let queryStr = `SELECT *, COUNT(*) OVER() :: INT AS full_count 
   FROM comments `;
