@@ -1,4 +1,4 @@
-const app = require("./src/app");
+const app = require("./dist/app");
 
 const { PORT = 9090 } = process.env;
 
