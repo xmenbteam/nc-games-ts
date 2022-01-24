@@ -4,28 +4,28 @@ type RawCategory = {
 };
 
 type RawUser = {
-  username: String;
-  name: String;
-  avatar_url: String;
+  username: string;
+  name: string;
+  avatar_url: string;
 };
 
 type RawComment = {
-  body: String;
-  votes: Number;
-  author: String;
-  review_id: Number;
+  body: string;
+  votes: number;
+  author: string;
+  review_id: number;
   created_at: Date;
 };
 
 type RawReview = {
-  title: String;
-  designer: String;
-  owner: String;
-  review_img_url: String;
-  review_body: String;
-  category: String;
+  title: string;
+  designer: string;
+  owner: string;
+  review_img_url: string;
+  review_body: string;
+  category: string;
   created_at: Date;
-  votes: Number;
+  votes: number;
 };
 
 type SeedData = {

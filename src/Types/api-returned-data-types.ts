@@ -1,19 +1,19 @@
 type ReturnedComment = {
-  body: String;
+  body: string;
   votes: Number;
-  author: String;
+  author: string;
   review_id: Number;
   created_at: Date;
 };
 
 type ReturnedReview = {
-  title: String;
-  designer: String;
-  owner: String;
-  review_img_url: String;
-  review_body: String;
-  category: String;
-  created_at: String;
+  title: string;
+  designer: string;
+  owner: string;
+  review_img_url: string;
+  review_body: string;
+  category: string;
+  created_at: string;
   votes: Number;
   review_id: Number;
   comment_count: Number;

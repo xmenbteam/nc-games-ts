@@ -1,16 +1,16 @@
-export type formattedCategoryData = [String, String];
+export type formattedCategoryData = [string, string];
 
-export type formattedUserData = [String, String, String];
+export type formattedUserData = [string, string, string];
 
 export type formattedReviewData = [
-  String,
-  String,
-  String,
-  String,
-  Number,
-  String,
-  String,
+  string,
+  string,
+  string,
+  string,
+  number,
+  string,
+  string,
   Date
 ];
 
-export type formattedCommentData = [String, Number, Number, Date, String];
+export type formattedCommentData = [string, number, number, Date, string];
