@@ -270,6 +270,13 @@ describe("REVIEWS", () => {
         );
       });
     });
+    test("404 - Invalid Category", async () => {
+      const response = await request(app)
+        .get("/api/reviews?category=cheese")
+        .expect(404);
+      const message = response.body.msg;
+      expect(message).toBe("Not found!");
+    });
   });
   describe("PATCH REVIEW BY ID", () => {
     test("201 - Increases votes review by ID", async () => {

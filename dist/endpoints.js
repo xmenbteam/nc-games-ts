@@ -74,12 +74,13 @@ exports.endPoints = {
             queries: [
                 "review_id",
                 "comment_id",
+                "category",
                 "sort_by",
                 "order_by",
                 "limit",
                 "page",
             ],
-            acceptedSortBy: [
+            sort_by: [
                 "created_at",
                 "category",
                 "owner",
@@ -88,7 +89,7 @@ exports.endPoints = {
                 "votes",
                 "comment_count",
             ],
-            acceptedOrderBy: ["asc", "desc"],
+            order_by: ["asc", "desc"],
             exampleResponse: {
                 reviews: [
                     {

@@ -67,6 +67,8 @@ const fetchAllReviews = ({ sort_by = "created_at", order_by = "desc", category, 
   LIMIT $1 OFFSET $2;`;
     const result = yield connection_1.default.query(queryStr, values);
     const reviews = result.rows;
+    if (!reviews.length)
+        return Promise.reject({ status: 404, msg: "Not found!" });
     const totalReviewsObject = {
         reviews,
         pageTotal: Math.ceil(result.rows[0].full_count / limit),

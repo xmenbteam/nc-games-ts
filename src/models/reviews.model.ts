@@ -72,6 +72,9 @@ export const fetchAllReviews = async ({
 
   const reviews: ReturnedReview[] = result.rows;
 
+  if (!reviews.length)
+    return Promise.reject({ status: 404, msg: "Not found!" });
+
   const totalReviewsObject = {
     reviews,
     pageTotal: Math.ceil(result.rows[0].full_count / limit),
