@@ -5,14 +5,24 @@ import request from "supertest";
 const app = require("../app");
 import { RawCategory, RawComment, RawUser } from "../Types/raw-data-types";
 import { ReturnedReview } from "../Types/api-returned-data-types";
+import { endPoints } from "../endpoints";
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
+describe("WELCOME", () => {
+  test("Returns welcome message", async () => {
+    const response = await request(app).get("/").expect(200);
+    expect(response.body.msg).toEqual(
+      "Hello! Welcome to Sam's TypeScript NC Games API! Go to /api to see possible endpoints!"
+    );
+  });
+});
+
 describe("API", () => {
   test("returns api", async () => {
     const response = await request(app).get("/api").expect(200);
-    expect(response.body.msg).toBe("Api running!");
+    expect(response.body).toEqual({ endPoints });
   });
   test("Bad Path", async () => {
     const response = await request(app).get("/api/cheese").expect(404);
@@ -335,6 +345,7 @@ describe("REVIEWS", () => {
       const response = await request(app)
         .get(`/api/reviews?limit=${limit}&page=${p}`)
         .expect(200);
+
       expect(response.body.reviews.length).toBe(11);
     });
     test("limit = 10 p = 2", async () => {
@@ -425,10 +436,10 @@ describe("REVIEWS", () => {
             .get(`/api/reviews/${review_id}`)
             .expect(404);
           expect(review.body.msg).toBe("Review Not Found!");
-          // const comments = await request(app)
-          //   .get(`/api/reviews/${review_id}/comments`)
-          //   .expect(404);
-          // expect(comments.body.msg).toBe("Oh dear, comments not found!");
+          const comments = await request(app)
+            .get(`/api/reviews/${review_id}/comments`)
+            .expect(404);
+          expect(comments.body.msg).toBe("Comments not found!");
         });
     });
   });
@@ -522,6 +533,7 @@ describe("COMMENTS", () => {
         .get("/api/reviews/2/comments")
         .expect(200);
       const comments = response.body.comments;
+
       expect(Array.isArray(comments)).toBe(true);
       expect(comments.length).toBe(3);
     });

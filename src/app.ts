@@ -6,11 +6,13 @@ import {
   handleInvalidPaths,
 } from "./errors";
 import apiRouter from "./routes/api.router";
+import welcomeRouter from "./routes/welcome.router";
 
 const app: Application = express();
 
 app.use(express.json());
 
+app.use("/", welcomeRouter);
 app.use("/api", apiRouter);
 
 app.all("/*", handleInvalidPaths);
