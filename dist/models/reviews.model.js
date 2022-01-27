@@ -22,7 +22,7 @@ const fetchReviewById = (review_id) => __awaiter(void 0, void 0, void 0, functio
   SELECT reviews.*, COUNT(comments.review_id) :: INT AS comment_count
   FROM reviews
   LEFT JOIN comments ON comments.review_id = reviews.review_id
-  WHERE comments.review_id = $1
+  WHERE reviews.review_id = $1
   GROUP BY reviews.review_id 
   LIMIT 1
   `;
