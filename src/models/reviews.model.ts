@@ -77,6 +77,7 @@ export const fetchAllReviews = async ({
 
   const totalReviewsObject = {
     reviews,
+    currentPage: page,
     pageTotal: Math.ceil(result.rows[0].full_count / limit),
   };
 

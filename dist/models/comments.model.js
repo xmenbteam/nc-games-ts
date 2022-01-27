@@ -51,6 +51,7 @@ const fetchComments = ({ review_id, comment_id, sort_by = "created_at", order_by
         });
     const returnedObj = {
         comments: comments.rows,
+        currentPage: page,
         pageTotal: Math.ceil(comments.rows[0].full_count / limit),
     };
     return returnedObj;

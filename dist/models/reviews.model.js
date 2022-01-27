@@ -71,6 +71,7 @@ const fetchAllReviews = ({ sort_by = "created_at", order_by = "desc", category, 
         return Promise.reject({ status: 404, msg: "Not found!" });
     const totalReviewsObject = {
         reviews,
+        currentPage: page,
         pageTotal: Math.ceil(result.rows[0].full_count / limit),
     };
     return totalReviewsObject;

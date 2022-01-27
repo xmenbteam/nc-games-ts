@@ -21,11 +21,13 @@ type ReturnedReview = {
 
 type ReturnedReviewObj = {
   reviews: ReturnedReview[];
+  currentPage: Number;
   pageTotal: number;
 };
 
 type ReturnedCommentObj = {
   comments: ReturnedComment[];
+  currentPage: Number;
   pageTotal: Number;
 };
 
