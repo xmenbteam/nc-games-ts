@@ -50,6 +50,12 @@ export const fetchComments = async ({
 
   const comments = await db.query(queryStr, values);
 
+  if (!comments.rows.length)
+    return Promise.reject({
+      status: 404,
+      msg: "Comments not found!",
+    });
+
   const returnedObj = {
     comments: comments.rows,
     currentPage: page,
