@@ -28,9 +28,11 @@ export const getComments = async (
       page,
     });
 
-    res
-      .status(200)
-      .send({ comments: response.comments, pages: response.pageTotal });
+    res.status(200).send({
+      comments: response.comments,
+      pages: response.pageTotal,
+      currentPage: response.currentPage,
+    });
   } catch (err) {
     next(err);
   }
