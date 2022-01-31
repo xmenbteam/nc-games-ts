@@ -72,6 +72,7 @@ const fetchAllReviews = ({ sort_by = "created_at", order_by = "desc", category, 
     const totalReviewsObject = {
         reviews,
         currentPage: page,
+        reviewsPerPage: limit,
         pageTotal: Math.ceil(result.rows[0].full_count / limit),
     };
     return totalReviewsObject;

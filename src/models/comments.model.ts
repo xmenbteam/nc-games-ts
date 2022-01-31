@@ -59,6 +59,7 @@ export const fetchComments = async ({
   const returnedObj = {
     comments: comments.rows,
     currentPage: page,
+    commentsPerPage: limit,
     pageTotal: Math.ceil(comments.rows[0].full_count / limit),
   };
 
