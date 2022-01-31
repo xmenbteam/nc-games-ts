@@ -23,9 +23,7 @@ const getComments = ({ query, params }, res, next) => __awaiter(void 0, void 0, 
             limit,
             page,
         });
-        res
-            .status(200)
-            .send({ comments: response.comments, pages: response.pageTotal });
+        res.status(200).send(response);
     }
     catch (err) {
         next(err);

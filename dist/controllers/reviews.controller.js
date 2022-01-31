@@ -32,7 +32,7 @@ const getAllReviews = ({ query }, res, next) => __awaiter(void 0, void 0, void 0
             limit,
             page,
         });
-        res.status(200).send({ reviews: result.reviews, pages: result.pageTotal });
+        res.status(200).send(result);
     }
     catch (err) {
         next(err);
