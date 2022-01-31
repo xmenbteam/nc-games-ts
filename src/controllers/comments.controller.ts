@@ -28,11 +28,7 @@ export const getComments = async (
       page,
     });
 
-    res.status(200).send({
-      comments: response.comments,
-      pages: response.pageTotal,
-      currentPage: response.currentPage,
-    });
+    res.status(200).send(response);
   } catch (err) {
     next(err);
   }

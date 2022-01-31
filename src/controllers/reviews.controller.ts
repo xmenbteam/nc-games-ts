@@ -37,13 +37,7 @@ export const getAllReviews = async (
       limit,
       page,
     });
-    res
-      .status(200)
-      .send({
-        reviews: result.reviews,
-        pages: result.pageTotal,
-        currentPage: result.currentPage,
-      });
+    res.status(200).send(result);
   } catch (err) {
     next(err);
   }
