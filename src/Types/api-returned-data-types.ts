@@ -1,35 +1,36 @@
-type ReturnedComment = {
-  body: string;
+interface Post {
   votes: Number;
-  author: string;
   review_id: Number;
   created_at: Date;
-};
+}
 
-type ReturnedReview = {
+interface ReturnedComment extends Post {
+  body: string;
+  author: string;
+}
+
+interface ReturnedReview extends Post {
   title: string;
   designer: string;
   owner: string;
   review_img_url: string;
   review_body: string;
   category: string;
-  created_at: string;
-  votes: Number;
-  review_id: Number;
   comment_count: Number;
-};
+}
 
-type ReturnedReviewObj = {
-  reviews: ReturnedReview[];
+interface ReturnedObj {
   currentPage: Number;
   pageTotal: number;
-};
+}
 
-type ReturnedCommentObj = {
+interface ReturnedReviewObj extends ReturnedObj {
+  reviews: ReturnedReview[];
+}
+
+interface ReturnedCommentObj extends ReturnedObj {
   comments: ReturnedComment[];
-  currentPage: Number;
-  pageTotal: Number;
-};
+}
 
 export {
   ReturnedComment,

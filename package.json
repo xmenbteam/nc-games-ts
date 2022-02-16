@@ -7,6 +7,7 @@
     "test": "jest ./src",
     "test-api": "jest ./src/__tests__/api.test.ts",
     "tscw": "tsc --watch",
+    "tsc": "tsc",
     "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) yarn seed",
     "start": "node listen.js"
   },

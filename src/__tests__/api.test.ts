@@ -96,7 +96,7 @@ describe("REVIEWS", () => {
           "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
         review_body: "We couldn't find the werewolf!",
         category: "social deduction",
-        created_at: "2021-01-18T10:01:41.251Z",
+        created_at: expect.any(String),
         votes: 5,
         comment_count: 3,
       };
@@ -361,7 +361,9 @@ describe("REVIEWS", () => {
       const response = await request(app)
         .get(`/api/reviews?limit=${limit}&page=${p}`)
         .expect(200);
-      expect(response.body.pages).toBe(2);
+      expect(response.body.pageTotal).toBe(2);
+      expect(response.body.reviewsPerPage).toBe("10");
+      expect(response.body.currentPage).toBe("2");
       expect(response.body.reviews.length).toBe(3);
     });
     test("limit = 2 p = 1", async () => {
@@ -370,7 +372,7 @@ describe("REVIEWS", () => {
       const response = await request(app)
         .get(`/api/reviews?limit=${limit}&page=${p}`)
         .expect(200);
-      expect(response.body.pages).toBe(7);
+      expect(response.body.pageTotal).toBe(7);
       expect(response.body.reviews.length).toBe(2);
     });
   });
@@ -743,7 +745,7 @@ describe("COMMENTS", () => {
         .get(`/api/reviews/${review_id}/comments?limit=${limit}&page=${p}`)
         .expect(200);
       expect(response.body.comments.length).toBe(1);
-      expect(response.body.pages).toBe(3);
+      expect(response.body.pageTotal).toBe(3);
     });
   });
 });
