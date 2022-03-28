@@ -24,8 +24,12 @@ describe("API", () => {
     const response = await request(app).get("/api").expect(200);
     expect(response.body).toEqual({ endPoints });
   });
-  test("Bad Path", async () => {
+  test("Bad /api Path", async () => {
     const response = await request(app).get("/api/cheese").expect(404);
+    expect(response.body.msg).toBe("Sorry, invalid route");
+  });
+  test("Bad / Path", async () => {
+    const response = await request(app).get("/cheese").expect(404);
     expect(response.body.msg).toBe("Sorry, invalid route");
   });
 });
