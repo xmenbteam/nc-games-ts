@@ -1,7 +1,7 @@
 import db from "../db/connection";
 import { ReturnedCommentObj } from "../Types/api-returned-data-types";
 import { CommentsParams } from "../Types/parameter-types";
-import { checkIfValid, pageOffsetCalc } from "../Utils/util-functions";
+import UtilFunctions from "../Utils/util-functions";
 import { sortByValues, orderByValues } from "../Utils/query-utils";
 import { RawComment } from "../Types/raw-data-types";
 
@@ -13,6 +13,8 @@ export const fetchComments = async ({
   limit = 10,
   page = 1,
 }: CommentsParams): Promise<ReturnedCommentObj> => {
+  const { pageOffsetCalc, checkIfValid } = UtilFunctions;
+
   const offset = pageOffsetCalc(page, limit);
 
   const values: any[] = [limit, offset];

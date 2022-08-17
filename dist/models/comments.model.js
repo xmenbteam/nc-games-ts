@@ -14,13 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeComment = exports.updateComment = exports.sendComment = exports.fetchComments = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
-const util_functions_1 = require("../Utils/util-functions");
+const util_functions_1 = __importDefault(require("../Utils/util-functions"));
 const query_utils_1 = require("../Utils/query-utils");
 const fetchComments = ({ review_id, comment_id, sort_by = "created_at", order_by = "desc", limit = 10, page = 1, }) => __awaiter(void 0, void 0, void 0, function* () {
-    const offset = (0, util_functions_1.pageOffsetCalc)(page, limit);
+    const { pageOffsetCalc, checkIfValid } = util_functions_1.default;
+    const offset = pageOffsetCalc(page, limit);
     const values = [limit, offset];
-    const isValidSortBy = (0, util_functions_1.checkIfValid)(sort_by, query_utils_1.sortByValues);
-    const isValidOrderBy = (0, util_functions_1.checkIfValid)(order_by, query_utils_1.orderByValues);
+    const isValidSortBy = checkIfValid(sort_by, query_utils_1.sortByValues);
+    const isValidOrderBy = checkIfValid(order_by, query_utils_1.orderByValues);
     if (!isValidSortBy)
         return Promise.reject({
             status: 400,

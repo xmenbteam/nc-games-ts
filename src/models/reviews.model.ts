@@ -4,9 +4,9 @@ import {
   ReturnedReviewObj,
 } from "../Types/api-returned-data-types";
 import { fetchReviewsParams } from "../Types/parameter-types";
-import { pageOffsetCalc } from "../Utils/util-functions";
+import UtilFunctions from "../Utils/util-functions";
 import { sortByValues, orderByValues } from "../Utils/query-utils";
-import { checkIfValid } from "../Utils/util-functions";
+
 import { PostReview } from "../Types/post-data-types";
 
 export const fetchReviewById = async (
@@ -35,6 +35,8 @@ export const fetchAllReviews = async ({
   limit = 10,
   page = 1,
 }: fetchReviewsParams): Promise<ReturnedReviewObj> => {
+  const { checkIfValid, pageOffsetCalc } = UtilFunctions;
+
   const offset = pageOffsetCalc(page, limit);
   const values: any[] = [limit, offset];
 

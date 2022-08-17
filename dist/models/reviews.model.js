@@ -14,9 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeReview = exports.sendReview = exports.updateReviewById = exports.fetchAllReviews = exports.fetchReviewById = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
-const util_functions_1 = require("../Utils/util-functions");
+const util_functions_1 = __importDefault(require("../Utils/util-functions"));
 const query_utils_1 = require("../Utils/query-utils");
-const util_functions_2 = require("../Utils/util-functions");
 const fetchReviewById = (review_id) => __awaiter(void 0, void 0, void 0, function* () {
     let queryStr = `
   SELECT reviews.*, COUNT(comments.review_id) :: INT AS comment_count
@@ -37,15 +36,16 @@ const fetchReviewById = (review_id) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.fetchReviewById = fetchReviewById;
 const fetchAllReviews = ({ sort_by = "created_at", order_by = "desc", category, limit = 10, page = 1, }) => __awaiter(void 0, void 0, void 0, function* () {
-    const offset = (0, util_functions_1.pageOffsetCalc)(page, limit);
+    const { checkIfValid, pageOffsetCalc } = util_functions_1.default;
+    const offset = pageOffsetCalc(page, limit);
     const values = [limit, offset];
-    if (!(0, util_functions_2.checkIfValid)(sort_by, query_utils_1.sortByValues)) {
+    if (!checkIfValid(sort_by, query_utils_1.sortByValues)) {
         return Promise.reject({
             status: 400,
             msg: `Invalid sort_by query: ${sort_by}`,
         });
     }
-    if (!(0, util_functions_2.checkIfValid)(order_by, query_utils_1.orderByValues)) {
+    if (!checkIfValid(order_by, query_utils_1.orderByValues)) {
         return Promise.reject({
             status: 400,
             msg: `Invalid order_by query: ${order_by}`,

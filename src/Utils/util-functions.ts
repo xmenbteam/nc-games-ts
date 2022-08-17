@@ -1,6 +1,8 @@
-export const pageOffsetCalc = (page: number, limit: number): number => {
-  return (page - 1) * limit;
-};
+export default class UtilFunctions {
+  static pageOffsetCalc = (page: number, limit: number): number => {
+    return (page - 1) * limit;
+  };
 
-export const checkIfValid = (string: string, array: string[]): boolean =>
-  array.includes(string);
+  static checkIfValid = (string: string, array: string[]): boolean =>
+    array.includes(string);
+}
